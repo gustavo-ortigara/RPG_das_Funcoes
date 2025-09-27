@@ -11,6 +11,7 @@ public class jogoFuncoesComplexo {
         int pocao = 2;
         int xp = 0;
         boolean especialDisponivel = true;
+        boolean defesa = false;
 
         // História inicial
         System.out.println("Era uma vez em um reino distante...");
@@ -43,7 +44,6 @@ public class jogoFuncoesComplexo {
                 vidaMonstro = atacar(vidaMonstro, rand);
 
 
-
             } else if (escolha == 2) {
                 // TODO: chamar a função usarPocao()
                 // Essa função deve:
@@ -53,12 +53,25 @@ public class jogoFuncoesComplexo {
                 // 4. Retornar a nova vida de Taffeson.
                 // vidaHeroi = usarPocao(vidaHeroi, pocao);
                 // if (pocao > 0) pocao--; // só gasta se tinha
+
+                vidaHeroi = usarPocao(vidaHeroi, pocao);
+
+                if(pocao > 0){
+                    pocao--;
+                }else{
+                    System.out.println("Não há poções restantes!");
+                }
+
             } else if (escolha == 3) {
                 // TODO: chamar a função defender()
                 // Essa função deve:
                 // 1. Apenas imprimir uma mensagem avisando que Taffeson está defendendo.
                 // 2. Reduzir dano em 50%.
                 // defender();
+
+                defesa = defender();
+
+
             } else if (escolha == 4) {
                 // TODO: chamar a função poderEspecial()
                 // Essa função deve:
@@ -71,6 +84,14 @@ public class jogoFuncoesComplexo {
                 // } else {
                 //     System.out.println("❌ O poder especial já foi usado!");
                 // }
+
+                 if (especialDisponivel) {
+                     vidaMonstro = poderEspecial(vidaMonstro);
+                     especialDisponivel = false;
+                 } else {
+                     System.out.println("❌ O poder especial já foi usado!");
+                }
+
             } else if (escolha == 5) {
                 // TODO: chamar a função fugir()
                 // Essa função deve:
@@ -91,6 +112,11 @@ public class jogoFuncoesComplexo {
                 ataqueMonstro *= 2;
                 System.out.println("💥 O monstro acertou um CRÍTICO!");
             }
+            if (defesa){
+                ataqueMonstro /= 2;
+                defesa = false;
+            }
+
             vidaHeroi -= ataqueMonstro;
             System.out.println("🐉 O monstro atacou e causou " + ataqueMonstro + " de dano!");
         }
@@ -110,7 +136,8 @@ public class jogoFuncoesComplexo {
     }
 
 
-    public static int atacar(int vidaMonstro, Random rand ) {
+
+    public static int atacar(int vidaMonstro, Random rand) {
 
         int ataqueHeroi = rand.nextInt(4) + 8; // dano entre 8 e 12
         boolean critico = rand.nextInt(100) < 20; // 20% de chance crítico
@@ -119,10 +146,39 @@ public class jogoFuncoesComplexo {
             System.out.println("💥 O Tafferson acertou um CRÍTICO!");
         }
         vidaMonstro -= ataqueHeroi;
-        System.out.println("🐉 O Tafferson atacou e causou " + ataqueHeroi + " de dano!");
+        System.out.println("\uD83D\uDDE1 O Tafferson atacou e causou " + ataqueHeroi + " de dano!");
 
         return vidaMonstro;
     }
+
+    public static int usarPocao(int vidaHeroi, int pocao) {
+
+        if (pocao > 0) {
+            vidaHeroi += 15;
+            System.out.println("Você usou uma poção e recuperou 15 pontos de vida");
+        }
+
+        return vidaHeroi;
+    }
+
+    public static boolean defender(){
+
+        System.out.println("Tafferson está defendendo.");
+        boolean defender = true;
+
+        return defender;
+
+    }
+
+    public static int poderEspecial(int vidaMonstro) {
+
+        System.out.println("Tafferson usou o Poder Especial!!");
+        System.out.println("Tafferson causou 25 de dano!!");
+        vidaMonstro -= 25;
+
+        return vidaMonstro;
+    }
+
 
     // =============================
     // Funções DEVEM implementar, como exemplo
