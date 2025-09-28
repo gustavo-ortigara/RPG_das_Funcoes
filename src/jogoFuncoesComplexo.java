@@ -12,6 +12,7 @@ public class jogoFuncoesComplexo {
         int xp = 0;
         boolean especialDisponivel = true;
         boolean defesa = false;
+        boolean emBatalha = true;
 
         // História inicial
         System.out.println("Era uma vez em um reino distante...");
@@ -22,7 +23,7 @@ public class jogoFuncoesComplexo {
         System.out.println("Bem-vindo ao RPG das Funções!");
         System.out.println("Ajude Taffeson a derrotar o monstro para salvar o vilarejo.\n");
 
-        while (vidaHeroi > 0 && vidaMonstro > 0) {
+        while (vidaHeroi > 0 && vidaMonstro > 0 && emBatalha) {
             System.out.println("\n❤️ Vida de Taffeson: " + vidaHeroi + " | 🐉 Vida do Monstro: " + vidaMonstro);
             System.out.println("🎒 Poções restantes: " + pocao);
             System.out.println("Escolha sua ação:");
@@ -56,9 +57,9 @@ public class jogoFuncoesComplexo {
 
                 vidaHeroi = usarPocao(vidaHeroi, pocao);
 
-                if(pocao > 0){
+                if (pocao > 0) {
                     pocao--;
-                }else{
+                } else {
                     System.out.println("Não há poções restantes!");
                 }
 
@@ -85,11 +86,11 @@ public class jogoFuncoesComplexo {
                 //     System.out.println("❌ O poder especial já foi usado!");
                 // }
 
-                 if (especialDisponivel) {
-                     vidaMonstro = poderEspecial(vidaMonstro);
-                     especialDisponivel = false;
-                 } else {
-                     System.out.println("❌ O poder especial já foi usado!");
+                if (especialDisponivel) {
+                    vidaMonstro = poderEspecial(vidaMonstro);
+                    especialDisponivel = false;
+                } else {
+                    System.out.println("❌ O poder especial já foi usado!");
                 }
 
             } else if (escolha == 5) {
@@ -98,7 +99,10 @@ public class jogoFuncoesComplexo {
                 // 1. Mostrar mensagem de que Taffeson fugiu da batalha.
                 // 2. Encerrar o jogo imediatamente.
                 // fugir();
-                return;
+
+                emBatalha = fugir();
+                break;
+
             } else {
                 System.out.println("Opção inválida!");
                 continue;
@@ -106,19 +110,9 @@ public class jogoFuncoesComplexo {
 
             // Turno do monstro
             //TODO leve essa logica para uma função chamada Ataque de Mostro()
-            int ataqueMonstro = rand.nextInt(10) + 5; // dano entre 5 e 15
-            boolean critico = rand.nextInt(100) < 15; // 15% de chance crítico
-            if (critico) {
-                ataqueMonstro *= 2;
-                System.out.println("💥 O monstro acertou um CRÍTICO!");
-            }
-            if (defesa){
-                ataqueMonstro /= 2;
-                defesa = false;
-            }
 
-            vidaHeroi -= ataqueMonstro;
-            System.out.println("🐉 O monstro atacou e causou " + ataqueMonstro + " de dano!");
+            vidaHeroi = ataqueMonstro(vidaHeroi, rand, defesa);
+            defesa = false;
         }
 
         if (vidaMonstro <= 0) {
@@ -128,8 +122,14 @@ public class jogoFuncoesComplexo {
             // 2. Retornar esse valor como experiência (XP).
             // 3. Mostrar mensagem de vitória com o XP ganho.
             // xp = ganharXP();
+
+            xp = ganharXp(rand);
+
+
             System.out.println("🎉 Taffeson derrotou o monstro e ganhou " + xp + " XP!");
             System.out.println("🏆 O vilarejo foi salvo graças à bravura de Taffeson!");
+        } else if (!emBatalha){
+            System.out.println("Sem herói o vilarejo está em perigo!");
         } else {
             System.out.println("💀 Taffeson foi derrotado... o vilarejo está em perigo!");
         }
@@ -143,7 +143,7 @@ public class jogoFuncoesComplexo {
         boolean critico = rand.nextInt(100) < 20; // 20% de chance crítico
         if (critico) {
             ataqueHeroi *= 2;
-            System.out.println("💥 O Tafferson acertou um CRÍTICO!");
+            System.out.println("💥 O Taffeson acertou um CRÍTICO!");
         }
         vidaMonstro -= ataqueHeroi;
         System.out.println("\uD83D\uDDE1 O Tafferson atacou e causou " + ataqueHeroi + " de dano!");
@@ -163,7 +163,7 @@ public class jogoFuncoesComplexo {
 
     public static boolean defender(){
 
-        System.out.println("Tafferson está defendendo.");
+        System.out.println("Taffeson está defendendo.");
         boolean defender = true;
 
         return defender;
@@ -172,11 +172,43 @@ public class jogoFuncoesComplexo {
 
     public static int poderEspecial(int vidaMonstro) {
 
-        System.out.println("Tafferson usou o Poder Especial!!");
-        System.out.println("Tafferson causou 25 de dano!!");
+        System.out.println("Taffeson usou o Poder Especial!!");
+        System.out.println("Taffeson causou 25 de dano!!");
         vidaMonstro -= 25;
 
         return vidaMonstro;
+    }
+
+    public static boolean fugir (){
+        System.out.println("Taffeson fugiu da batalha!");
+        boolean emBatalha = false;
+        return emBatalha;
+    }
+
+    public static int ganharXp(Random rand){
+        int xp = rand.nextInt(20) + 10;
+
+        return xp;
+    }
+
+    public static int ataqueMonstro(int vidaHeroi, Random rand, boolean defesa) {
+
+            int ataqueMonstro = rand.nextInt(10) + 5; // dano entre 5 e 15
+            boolean critico = rand.nextInt(100) < 15; // 15% de chance crítico
+            if (critico) {
+                ataqueMonstro *= 2;
+                System.out.println("💥 O monstro acertou um CRÍTICO!");
+            }
+            if (defesa){
+                ataqueMonstro /= 2;
+                defesa = false;
+            }
+
+            vidaHeroi -= ataqueMonstro;
+            System.out.println("🐉 O monstro atacou e causou " + ataqueMonstro + " de dano!");
+
+            return vidaHeroi;
+        }
     }
 
 
@@ -190,4 +222,3 @@ public class jogoFuncoesComplexo {
 
     // public static int poderEspecial(int vidaMonstro) { ... }
 
-}
